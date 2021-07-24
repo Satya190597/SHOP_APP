@@ -2,6 +2,8 @@
  * Products Controller.
  */
 
+const Product = require("../models/product");
+
 const products = [];
 
 module.exports.getAddProduct = (request, response) => {
@@ -12,11 +14,13 @@ module.exports.getAddProduct = (request, response) => {
 };
 
 module.exports.postAddProduct = (request, response) => {
-  products.push({ title: request.body.title });
+  const product = new Product(request.body.title);
+  product.save();
   response.redirect("/");
 };
 
 module.exports.getProducts = (request, response) => {
+  const products = Product.fetchAll();
   response.render("shop", {
     prods: products,
     docTitle: "shop",
