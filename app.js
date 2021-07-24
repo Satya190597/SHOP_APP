@@ -9,7 +9,7 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
 // Set global settings.
-app.set("view engine", "pug");
+app.set("view engine", "ejs");
 // Note : Default configuration for views is - views in root directory.
 app.set("views", "views");
 
