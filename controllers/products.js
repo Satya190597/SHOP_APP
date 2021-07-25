@@ -15,16 +15,18 @@ module.exports.getAddProduct = (request, response) => {
 
 module.exports.postAddProduct = (request, response) => {
   const product = new Product(request.body.title);
-  product.save();
-  response.redirect("/");
+  product.save(() => {
+    response.redirect("/");
+  }); 
 };
 
 module.exports.getProducts = (request, response) => {
-  const products = Product.fetchAll();
-  response.render("shop", {
-    prods: products,
-    docTitle: "shop",
-    path: "/",
-    pageTitle: "My Shop",
+  Product.fetchAll(products => {
+    response.render("shop", {
+      prods: products,
+      docTitle: "shop",
+      path: "/",
+      pageTitle: "My Shop",
+    });
   });
 };
