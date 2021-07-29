@@ -14,7 +14,7 @@ module.exports.postAddProduct = (request, response) => {
   const description = request.body.description;
   const product = new Product(title, imageUrl, description, price);
   product.save(() => {
-    response.redirect("/");
+    return response.redirect("/");
   });
 };
 

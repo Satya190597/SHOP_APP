@@ -11,7 +11,7 @@ module.exports.getProducts = (request, response) => {
     response.render("shop/product-list", {
       prods: products,
       docTitle: "shop",
-      path: "/",
+      path: "/products",
       pageTitle: "My Shop",
     });
   });
@@ -19,7 +19,7 @@ module.exports.getProducts = (request, response) => {
 
 module.exports.getIndex = (request, response) => {
   Product.fetchAll((products) => {
-    response.render("shop/product-list", {
+    response.render("shop/index", {
       prods: products,
       docTitle: "shop",
       path: "/",
