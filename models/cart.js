@@ -8,7 +8,7 @@ module.exports = class Cart {
     // Fetch previous Cart.
     fs.readFile(p, (err, fileContent) => {
       let cart = { products: [], totalPrice: 0 };
-      if (!err) {
+      if (!err && fileContent.length>0) {
         cart = JSON.parse(fileContent);
       }
       const existingProduct = cart.products.find(
@@ -22,12 +22,12 @@ module.exports = class Cart {
       if (existingProduct) {
         updatedProduct = { ...existingProduct };
         updatedProduct.quantity = updatedProduct.quantity + 1;
-        cart.products[existingProductIndex] = existingProduct;
+        cart.products[existingProductIndex] = updatedProduct;
       } else {
         updatedProduct = { id: id, quantity: 1 };
         cart.products = [...cart.products, updatedProduct];
       }
-      cart.totalPrice = cart.totalPrice + productPrice;
+      cart.totalPrice =  parseFloat(cart.totalPrice) + parseFloat(productPrice);
       fs.writeFile(p,JSON.stringify(cart),error => {
         console.log(error)
         })
