@@ -53,6 +53,13 @@ module.exports.postEditProduct = (request, response) => {
   });
 };
 
+module.exports.postDeleteProduct = (request,response,next) => {
+  const productId = request.body.productId;
+  Product.deleteById(productId,() => {
+    response.redirect("/")
+  })
+}
+
 module.exports.getProducts = (request, response) => {
   Product.fetchAll((products) => {
     response.render("admin/product-list", {
