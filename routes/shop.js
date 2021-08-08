@@ -13,6 +13,9 @@ router.get("/cart", shopController.getCart);
 // => Cart POST Route.
 router.post("/cart", shopController.postCart);
 
+// => Cart Delete Item POST.
+router.post("/cart-delete-item", shopController.deleteCartItem);
+
 router.get("shop/checkout", shopController.getCheckout);
 
 // Dynamic Routes | => GET Route.

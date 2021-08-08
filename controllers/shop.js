@@ -82,3 +82,12 @@ module.exports.getCheckout = (request, response) => {
     pageTitle: "Checkout Page",
   });
 };
+
+module.exports.deleteCartItem = (request, response) => {
+  const productId = request.body.productId;
+  Product.findById(productId,(product) => {
+    Cart.removeCartItem(product.id,product.price,() => {
+      return response.redirect("/cart");
+    })
+  })
+};

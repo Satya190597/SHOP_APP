@@ -59,6 +59,25 @@ module.exports = class Cart {
     });
   }
 
+  static removeCartItem(id, productPrice, cb) {
+    this.getCarts((cartData) => {
+      const productList = cartData.products;
+      let totalPrice = cartData.totalPrice;
+      const cartProduct = productList.find((product) => {
+        return product.id === id;
+      });
+      totalPrice = totalPrice - cartProduct.quantity * productPrice;
+      fs.writeFile(
+        p,
+        JSON.stringify({
+          products: productList.filter((p) => p.id !== id),
+          totalPrice: totalPrice,
+        }),
+        (error) => { cb(); }
+      );
+    });
+  }
+
   static getCarts(cb) {
     fs.readFile(p, (error, fileContent) => {
       if (error) {
