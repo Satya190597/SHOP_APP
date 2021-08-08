@@ -9,6 +9,9 @@ const Cart = require("../models/cart");
 
 const products = [];
 
+/**
+ * @description  Load product list page. route  => Get => /products
+ */
 module.exports.getProducts = (request, response) => {
   Product.fetchAll().then(([rows,fieldsData]) => {
     response.render("shop/product-list",{
@@ -18,14 +21,6 @@ module.exports.getProducts = (request, response) => {
     })
   }).catch((error) => {
     console.log(error);
-  });
-  Product.fetchAll((products) => {
-    response.render("shop/product-list", {
-      prods: products,
-      docTitle: "shop",
-      path: "/products",
-      pageTitle: "My Shop",
-    });
   });
 };
 
@@ -40,6 +35,9 @@ module.exports.getProduct = (request, response, next) => {
   });
 };
 
+/**
+ * @description  Load index page. route  => Get => /
+ */
 module.exports.getIndex = (request, response) => {
   Product.fetchAll()
     .then(([rows, fieldsData]) => {

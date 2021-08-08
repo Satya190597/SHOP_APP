@@ -6,6 +6,13 @@
 <body>
     <%- include('../includes/navigation.ejs') %>
     <main>
+        <% if(successMessage) { %>
+            <% if(successMessage === "true") { %>
+                <p>Product Added Successfully.</p>
+            <% } else { %>
+                <p>Sorry Something Went Wrong.</p>
+            <% } %>
+        <% } %>
         <% if(editMode) { %>
         <form class="product-form" action="/admin/edit-product" method="POST">
         <% } else { %>
