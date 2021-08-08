@@ -3,16 +3,20 @@
 <body>
     <%- include('../includes/navigation.ejs') %>
     <main class="centered">
-        <h1><%= product.title %></h1>
+        <% if(product) { %>
+        <h1><%= product.TITLE %></h1>
         <hr>
         <div>
-            <img src="<%= product.imageUrl %>" alt="<%= product.title %>"> 
+            <img src="<%= product.IMAGE_URL %>" alt="<%= product.TITLE %>"> 
         </div>
-        <h2><%= product.price %></h2>
-        <p><%= product.descriptions %></p>
+        <h2><%= product.PRICE %></h2>
+        <p><%= product.DESCRIPTION %></p>
         <form action="/cart" method="POST">
             <button type="submit" class="btn">Add To Cart</button>
-            <input type="hidden" name="productId" value="<%= product.id %>">
+            <input type="hidden" name="productId" value="<%= product.ID %>">
         </form>
+        <% } else { %>
+            <p>Product Details Not Found ...</p>
+        <% } %>
     </main>
 <%- include('../includes/end.ejs') %>

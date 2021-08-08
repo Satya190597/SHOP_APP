@@ -26,13 +26,19 @@ module.exports.getProducts = (request, response) => {
 
 module.exports.getProduct = (request, response, next) => {
   const id = request.params.productId;
-  Product.findById(id, (product) => {
+  Product.findById(id).then(([product,fieldsData]) => {
     response.render("shop/product-detail", {
-      products: product,
+      product: product[0],
       pageTitle: "Product Details",
       path: "/products",
     });
-  });
+  }).catch(error => {
+    response.render("shop/product-detail", {
+      product: null,
+      pageTitle: "Product Details",
+      path: "/products",
+    });
+  })
 };
 
 /**

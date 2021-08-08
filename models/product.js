@@ -13,6 +13,10 @@ module.exports = class Product {
     return db.execute("SELECT * FROM PRODUCTS");
   }
 
+  static findById(id) {
+    return db.execute("SELECT * FROM PRODUCTS WHERE ID = (?)",[id]);
+  }
+
   save() {
     return db.execute(
       "INSERT INTO PRODUCTS (TITLE,PRICE,DESCRIPTION,IMAGE_URL) VALUES (?,?,?,?)",
