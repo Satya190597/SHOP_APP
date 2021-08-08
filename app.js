@@ -1,8 +1,21 @@
 const path = require("path");
-var cors = require('cors');
+var cors = require("cors");
 
 const express = require("express");
 const bodyParser = require("body-parser");
+
+// Mysql Database import.
+const db = require("./util/database");
+
+// db.execute("SELECT * FROM PRODUCTS")
+//   .then((result) => {
+//     console.log("RESULT ..");
+//     console.log(result[0]);
+//   })
+//   .catch((error) => {
+//     console.log("ERROR ...");
+//     console.log(error);
+//   });
 
 const app = express();
 

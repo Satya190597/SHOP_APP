@@ -19,9 +19,13 @@
     "ejs": "^3.1.6",
     "express": "^4.16.3",
     "express-handlebars": "^5.3.2",
+    "mysql2": "^2.3.0",
     "pug": "^3.0.2"
   },
-  "nodemonConfig": {        
-    "ignore": ["data/products.json","data/cart.json"]  
+  "nodemonConfig": {
+    "ignore": [
+      "data/products.json",
+      "data/cart.json"
+    ]
   }
 }
