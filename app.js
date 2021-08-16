@@ -5,7 +5,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 // Mysql Database import.
-const db = require("./util/database");
+const sequelize = require("./util/database");
 
 // db.execute("SELECT * FROM PRODUCTS")
 //   .then((result) => {
@@ -39,4 +39,11 @@ app.use(shopRoutes);
 
 app.use(errorController.pageNotFound);
 
-app.listen(3002);
+// Sync Javascript data models to database table.
+sequelize.sync().then(result => {
+    app.listen(3002);
+}).catch(error => {
+    console.log(error)
+})
+
+
