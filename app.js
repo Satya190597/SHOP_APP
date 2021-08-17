@@ -24,6 +24,9 @@ const shopRoutes = require("./routes/shop");
 const errorController = require("./controllers/error");
 const { dirname } = require("path");
 
+const Product = require("./models/product");
+const User = require("./models/user");
+
 // Set global settings.
 app.set("view engine", "ejs");
 // Note : Default configuration for views is - views in root directory.
@@ -39,11 +42,16 @@ app.use(shopRoutes);
 
 app.use(errorController.pageNotFound);
 
+// Define Relationship.
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Product);
+
 // Sync Javascript data models to database table.
-sequelize.sync().then(result => {
+sequelize
+  .sync({force:true}) // Update New Changes.
+  .then((result) => {
     app.listen(3002);
-}).catch(error => {
-    console.log(error)
-})
-
-
+  })
+  .catch((error) => {
+    console.log(error);
+  });
