@@ -1,4 +1,4 @@
-const Product = require('../models/product');
+const Product = require("../models/product");
 
 module.exports.getAddProduct = (request, response) => {
   const querySuccess = request.query.success
@@ -15,17 +15,15 @@ module.exports.postAddProduct = (request, response) => {
   const price = request.body.price;
   const imageUrl = request.body.imageUrl;
   const description = request.body.description.trim();
-  // Create a new product.
-  Product.create({
-    title:title,
-    price:price,
-    description:description,
-    imageUrl:imageUrl
-  }).then(result => {
-    response.redirect('/admin/add-product?success=true')
-  }).catch(error => {
-    response.redirect('/admin/add-product?success=false')
-  })
+  const product = new Product(null, title, price, description, imageUrl);
+  product
+    .save()
+    .then((result) => {
+      response.redirect("/admin/add-product?success=true");
+    })
+    .catch((error) => {
+      response.redirect("/admin/add-product?success=false");
+    });
 };
 
 module.exports.getEditProduct = (request, response) => {
