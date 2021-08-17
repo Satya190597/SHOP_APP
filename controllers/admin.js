@@ -1,12 +1,12 @@
-const Product = require('../models/product');
+const Product = require("../models/product");
 
 module.exports.getAddProduct = (request, response) => {
-  const querySuccess = request.query.success
+  const querySuccess = request.query.success;
   response.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editMode: false,
-    successMessage: querySuccess ? querySuccess : null
+    successMessage: querySuccess ? querySuccess : null,
   });
 };
 
@@ -17,35 +17,40 @@ module.exports.postAddProduct = (request, response) => {
   const description = request.body.description.trim();
   // Create a new product.
   Product.create({
-    title:title,
-    price:price,
-    description:description,
-    imageUrl:imageUrl
-  }).then(result => {
-    response.redirect('/admin/add-product?success=true')
-  }).catch(error => {
-    response.redirect('/admin/add-product?success=false')
+    title: title,
+    price: price,
+    description: description,
+    imageUrl: imageUrl,
   })
+    .then((result) => {
+      response.redirect("/admin/add-product?success=true");
+    })
+    .catch((error) => {
+      response.redirect("/admin/add-product?success=false");
+    });
 };
 
 module.exports.getEditProduct = (request, response) => {
   const editMode = request.query.edit;
+  const querySuccess = request.query.success;
   if (String(true) !== editMode) {
     return response.redirect("/");
   }
   const id = request.params.productId;
 
-  Product.findById(id, (product) => {
-    if (!product) {
+  Product.findByPk(id)
+    .then((product) => {
+      response.render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editMode: editMode,
+        product: product,
+        successMessage: querySuccess ? querySuccess : null,
+      });
+    })
+    .catch((error) => {
       return response.redirect("/");
-    }
-    response.render("admin/edit-product", {
-      pageTitle: "Edit Product",
-      path: "/admin/edit-product",
-      editMode: editMode,
-      product: product,
     });
-  });
 };
 
 module.exports.postEditProduct = (request, response) => {
@@ -54,25 +59,57 @@ module.exports.postEditProduct = (request, response) => {
   const price = request.body.price;
   const imageUrl = request.body.imageUrl;
   const description = request.body.description;
-  const updatedProduct = new Product(id, title, imageUrl, description, price);
-  updatedProduct.save(() => {
-    return response.redirect("/");
-  });
+  Product.findByPk(id)
+    .then((product) => {
+      (product.title = title),
+        (product.price = price),
+        (product.imageUrl = imageUrl),
+        (product.description = description);
+      return product.save();
+    })
+    .then((updatedProduct) => {
+      response.redirect(
+        "/admin/edit-product/" + updatedProduct.id + "?edit=true&success=true"
+      );
+    })
+    .catch((error) => {
+      response.redirect(
+        "/admin/edit-product/" + id + "?edit=true&success=false"
+      );
+    });
 };
 
 module.exports.postDeleteProduct = (request, response, next) => {
   const productId = request.body.productId;
-  Product.deleteById(productId, () => {
-    response.redirect("/");
-  });
+  Product.findByPk(productId)
+    .then((product) => {
+      return product.destroy();
+    })
+    .then((result) => {
+      response.redirect("/");
+    })
+    .catch((error) => {
+      response.redirect("/");
+    });
 };
 
+/**
+ * @description  Load index page. route  => Get => /admin/product-list
+ */
 module.exports.getProducts = (request, response) => {
-  Product.fetchAll((products) => {
-    response.render("admin/product-list", {
-      pageTitle: "Admin Product List",
-      path: "/admin/product-list",
-      prods: products,
+  Product.findAll()
+    .then((products) => {
+      response.render("admin/product-list", {
+        pageTitle: "Admin Product List",
+        path: "/admin/product-list",
+        prods: products,
+      });
+    })
+    .catch((error) => {
+      response.render("admin/product-list", {
+        pageTitle: "Admin Product List",
+        path: "/admin/product-list",
+        prods: null,
+      });
     });
-  });
 };

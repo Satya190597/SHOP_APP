@@ -13,9 +13,9 @@ const products = [];
  * @description  Load product list page. route  => Get => /products
  */
 module.exports.getProducts = (request, response) => {
-  Product.fetchAll().then(([rows,fieldsData]) => {
+  Product.findAll().then((products) => {
     response.render("shop/product-list",{
-      products: rows,
+      products: products,
       pageTitle: "Product List",
       path: "/products",
     })
@@ -24,11 +24,15 @@ module.exports.getProducts = (request, response) => {
   });
 };
 
+/**
+ * @description  Load index page. route  => Get => /products/:productId
+ */
 module.exports.getProduct = (request, response, next) => {
   const id = request.params.productId;
-  Product.findById(id).then(([product,fieldsData]) => {
+  Product.findByPk(id).then((product) => {
+    console.log(product)
     response.render("shop/product-detail", {
-      product: product[0],
+      product: product,
       pageTitle: "Product Details",
       path: "/products",
     });
@@ -45,12 +49,12 @@ module.exports.getProduct = (request, response, next) => {
  * @description  Load index page. route  => Get => /
  */
 module.exports.getIndex = (request, response) => {
-  Product.fetchAll()
-    .then(([rows, fieldsData]) => {
+  Product.findAll()
+    .then((products) => {
       response.render("shop/index", {
         pageTitle: "Shop",
         path: "/",
-        products: rows,
+        products: products,
       });
     })
     .catch((error) => {

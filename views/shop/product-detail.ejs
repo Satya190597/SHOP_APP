@@ -4,16 +4,16 @@
     <%- include('../includes/navigation.ejs') %>
     <main class="centered">
         <% if(product) { %>
-        <h1><%= product.TITLE %></h1>
+        <h1><%= product.title %></h1>
         <hr>
         <div>
-            <img src="<%= product.IMAGE_URL %>" alt="<%= product.TITLE %>"> 
+            <img src="<%= product.imageUrl %>" alt="<%= product.TITLE %>"> 
         </div>
-        <h2><%= product.PRICE %></h2>
-        <p><%= product.DESCRIPTION %></p>
+        <h2><%= product.price %></h2>
+        <p><%= product.description %></p>
         <form action="/cart" method="POST">
             <button type="submit" class="btn">Add To Cart</button>
-            <input type="hidden" name="productId" value="<%= product.ID %>">
+            <input type="hidden" name="productId" value="<%= product.id %>">
         </form>
         <% } else { %>
             <p>Product Details Not Found ...</p>

@@ -8,7 +8,7 @@
     <main>
         <% if(successMessage) { %>
             <% if(successMessage === "true") { %>
-                <p>Product Added Successfully.</p>
+                <p>Product Updated Successfully.</p>
             <% } else { %>
                 <p>Sorry Something Went Wrong.</p>
             <% } %>
@@ -35,9 +35,7 @@
             </div>
             <div class="form-control">
                 <label for="description">Title</label>
-                <textarea name="description" id="description" cols="30" rows="10">
-                    <% if(editMode) { %><%= product.descriptions %><% } %>
-                </textarea>
+                <textarea name="description" id="description" cols="30" rows="10"><% if(editMode) { %><%= product.description %><% } %></textarea>
             </div>
             <% if(editMode) { %>
                 <input type="hidden" value="<%= product.id %>" name="id" />
