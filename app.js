@@ -37,10 +37,25 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static("public"));
 
+// Adding a user middleware.
+app.use((request, response, next) => {
+  User.findByPk(1)
+    .then((user) => {
+      request.user = user;
+      console.log(user.id)
+      next();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.pageNotFound);
+
+
 
 // Define Relationship.
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
@@ -48,8 +63,18 @@ User.hasMany(Product);
 
 // Sync Javascript data models to database table.
 sequelize
-  .sync({force:true}) // Update New Changes.
+  .sync() // Update New Changes.
   .then((result) => {
+    return User.findByPk(1);
+  })
+  .then((user) => {
+    // Create A Dummy User.
+    if (!user) {
+      return User.create({ name: "Max", email: "test@gmail.com" });
+    }
+    return Promise.resolve(user);
+  })
+  .then((user) => {
     app.listen(3002);
   })
   .catch((error) => {
