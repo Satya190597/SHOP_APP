@@ -57,13 +57,13 @@ module.exports.getEditProduct = (request, response) => {
   }
   const id = request.params.productId;
 
-  Product.findByPk(id)
-    .then((product) => {
+  request.user.getProducts({where: {id:id}})
+    .then((products) => {
       response.render("admin/edit-product", {
         pageTitle: "Edit Product",
         path: "/admin/edit-product",
         editMode: editMode,
-        product: product,
+        product: products[0],
         successMessage: querySuccess ? querySuccess : null,
       });
     })
@@ -116,7 +116,7 @@ module.exports.postDeleteProduct = (request, response, next) => {
  * @description  Load index page. route  => Get => /admin/product-list
  */
 module.exports.getProducts = (request, response) => {
-  Product.findAll()
+  request.user.getProducts()
     .then((products) => {
       response.render("admin/product-list", {
         pageTitle: "Admin Product List",
