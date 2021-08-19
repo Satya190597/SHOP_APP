@@ -15,13 +15,32 @@ module.exports.postAddProduct = (request, response) => {
   const price = request.body.price;
   const imageUrl = request.body.imageUrl;
   const description = request.body.description.trim();
-  // Create a new product.
-  Product.create({
-    title: title,
-    price: price,
-    description: description,
-    imageUrl: imageUrl,
-  })
+
+  /*
+    ----------------------------------------------------------------------------------------
+    Note: You can create a new product by using the traditional product create function too.
+    By passing the userId in the create payload object from the request.
+    ----------------------------------------------------------------------------------------
+    FUNCTION
+    ----------------------------------------------------------------------------------------
+      Product.create({
+        title: title,
+        price: price,
+        description: description,
+        imageUrl: imageUrl,
+        userId: request.user.id, <= From request.
+      })
+    ----------------------------------------------------------------------------------------
+  */
+ 
+  request.user
+    .createProduct({
+      title: title,
+      price: price,
+      description: description,
+      imageUrl: imageUrl,
+      userId: request.user.id,
+    })
     .then((result) => {
       response.redirect("/admin/add-product?success=true");
     })
@@ -106,6 +125,7 @@ module.exports.getProducts = (request, response) => {
       });
     })
     .catch((error) => {
+      console.log(error);
       response.render("admin/product-list", {
         pageTitle: "Admin Product List",
         path: "/admin/product-list",
