@@ -26,6 +26,8 @@ const { dirname } = require("path");
 
 const Product = require("./models/product");
 const User = require("./models/user");
+const Cart = require("./models/cart");
+const CartItem = require("./models/cart-item");
 
 // Set global settings.
 app.set("view engine", "ejs");
@@ -60,10 +62,14 @@ app.use(errorController.pageNotFound);
 // Define Relationship.
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE",foreignKey: {allowNull:false} });
 User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product,{through:CartItem});
+Product.belongsToMany(Cart,{through:CartItem});
 
 // Sync Javascript data models to database table.
 sequelize
-  .sync() // Update New Changes. => Force Recreate => Use {force:true}.
+  .sync({force:true}) // Update New Changes. => Force Recreate => Use {force:true}.
   .then((result) => {
     return User.findByPk(1);
   })
@@ -78,4 +84,5 @@ sequelize
     app.listen(3002);
   })
   .catch((error) => {
+    console.log(error)
   });
