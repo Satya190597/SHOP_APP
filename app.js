@@ -62,14 +62,14 @@ app.use(errorController.pageNotFound);
 // Define Relationship.
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE",foreignKey: {allowNull:false} });
 User.hasMany(Product);
-User.hasOne(Cart);
 Cart.belongsTo(User);
+User.hasOne(Cart);
 Cart.belongsToMany(Product,{through:CartItem});
 Product.belongsToMany(Cart,{through:CartItem});
 
 // Sync Javascript data models to database table.
 sequelize
-  .sync({force:true}) // Update New Changes. => Force Recreate => Use {force:true}.
+  .sync() // Update New Changes. => Force Recreate => Use {force:true}.
   .then((result) => {
     return User.findByPk(1);
   })
@@ -81,6 +81,10 @@ sequelize
     return Promise.resolve(user);
   })
   .then((user) => {
+    //return user.createCart();
+    return Promise.resolve(null);
+  })
+  .then(() => {
     app.listen(3002);
   })
   .catch((error) => {
