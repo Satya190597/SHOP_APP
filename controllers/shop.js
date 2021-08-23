@@ -73,6 +73,7 @@ module.exports.getCart = (request, response) => {
       return cart.getProducts()
     })
     .then((products) => {
+      console.log(products);
       response.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
@@ -123,13 +124,19 @@ module.exports.postCart = (request, response) => {
     const product = products.length>0 ? products[0] : undefined
     let newQuantity = 1;
     if(product) {
-
+      const oldQuantity = product.cartItem.quantity;
+      newQuantity = oldQuantity + 1;
+      return fetchedCart.addProduct(product, {through: {quantity: newQuantity}}).then(() =>
+        response.redirect("/cart")
+      )
     }
     // Add a new product to cart.
-    return Product.findByPk(productId).then(product => {
-      fetchedCart.addProduct(product,{ through: {quantity:newQuantity}});
+    Product.findByPk(productId).then(product => {
+      fetchedCart.addProduct(product,{ through: {quantity:newQuantity}}).then(() => {
+        return response.redirect("/cart");
+      })    
     })
-    return response.redirect("/cart");
+    
   })
   // Product.findById(productId, (product) => {
   //   Cart.addProduct(product.id, product.price);
@@ -146,10 +153,23 @@ module.exports.getCheckout = (request, response) => {
 };
 
 module.exports.deleteCartItem = (request, response) => {
-  const productId = request.body.productId;
-  Product.findById(productId, (product) => {
-    Cart.removeCartItem(product.id, product.price, () => {
-      return response.redirect("/cart");
-    });
-  });
+
+  request.user.getCart()
+  .then(cart => {
+    return cart.getProducts({where:{id:request.body.productId}})
+  })
+  .then(products => {
+    const product = products[0];
+    return product.cartItem.destroy();
+  })
+  .then(result => {
+    response.redirect("/cart");
+  })
+
+  // const productId = request.body.productId;
+  // Product.findById(productId, (product) => {
+  //   Cart.removeCartItem(product.id, product.price, () => {
+  //     return response.redirect("/cart");
+  //   });
+  // });
 };
