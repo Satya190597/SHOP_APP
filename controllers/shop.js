@@ -5,7 +5,6 @@
 const fs = require("fs");
 const path = require("path");
 const Product = require("../models/product");
-const Cart = require("../models/cart");
 
 const products = [];
 
@@ -173,3 +172,31 @@ module.exports.deleteCartItem = (request, response) => {
   //   });
   // });
 };
+
+module.exports.postOrder = (request,response) => {
+  // 1. Get all the cart items.
+  let productList;
+  request.user.getCart().then(cart => {
+    return cart.getProducts();
+  })
+  .then((products) => {
+    productList = products;
+    return request.user.createOrder();
+  })
+  .then(order => {
+    return order.addProducts(productList)
+  })
+  .then(result => {
+    return response.redirect("/orders")
+  })
+  .catch((error) => {
+      console.log(error);
+  })
+}
+
+module.exports.getOrders = (request,response) => {
+  response.render("shop/orders",{
+    path: "/orders",
+    pageTitle: "Orders Page"
+  })
+}

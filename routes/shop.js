@@ -21,4 +21,8 @@ router.get("shop/checkout", shopController.getCheckout);
 // Dynamic Routes | => GET Route.
 router.get("/products/:productId", shopController.getProduct);
 
+router.post("/orders", shopController.postOrder);
+
+router.get("/orders", shopController.getOrders);
+
 module.exports = router;
