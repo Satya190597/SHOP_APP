@@ -4,7 +4,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const Product = require("../models/product");
+const Product = require("../sequelize-models/product");
 
 const products = [];
 
@@ -69,7 +69,7 @@ module.exports.getCart = (request, response) => {
   request.user
     .getCart()
     .then((cart) => {
-      return cart.getProducts()
+      return cart.getProducts();
     })
     .then((products) => {
       console.log(products);
@@ -96,11 +96,11 @@ module.exports.getCart = (request, response) => {
   //         });
   //       }
   //     }
-      // response.render("shop/cart", {
-      //   path: "/cart",
-      //   pageTitle: "Your Cart",
-      //   cartProducts: cartProducts,
-      // });
+  // response.render("shop/cart", {
+  //   path: "/cart",
+  //   pageTitle: "Your Cart",
+  //   cartProducts: cartProducts,
+  // });
   //   });
   // });
   // request.user.getCart().then(cart => {
@@ -115,33 +115,34 @@ module.exports.postCart = (request, response) => {
   const productId = request.body.productId;
   let fetchedCart;
 
-  request.user.getCart().then(cart => {
-    fetchedCart = cart;
-    return cart.getProducts({where: {id:productId}})
-  })
-  .then(products => {
-    const product = products.length>0 ? products[0] : undefined
-    let newQuantity = 1;
-    if(product) {
-      const oldQuantity = product.cartItem.quantity;
-      newQuantity = oldQuantity + 1;
-      return fetchedCart.addProduct(product, {through: {quantity: newQuantity}}).then(() =>
-        response.redirect("/cart")
-      )
-    }
-    // Add a new product to cart.
-    Product.findByPk(productId).then(product => {
-      fetchedCart.addProduct(product,{ through: {quantity:newQuantity}}).then(() => {
-        return response.redirect("/cart");
-      })    
+  request.user
+    .getCart()
+    .then((cart) => {
+      fetchedCart = cart;
+      return cart.getProducts({ where: { id: productId } });
     })
-    
-  })
+    .then((products) => {
+      const product = products.length > 0 ? products[0] : undefined;
+      let newQuantity = 1;
+      if (product) {
+        const oldQuantity = product.cartItem.quantity;
+        newQuantity = oldQuantity + 1;
+        return fetchedCart
+          .addProduct(product, { through: { quantity: newQuantity } })
+          .then(() => response.redirect("/cart"));
+      }
+      // Add a new product to cart.
+      Product.findByPk(productId).then((product) => {
+        fetchedCart
+          .addProduct(product, { through: { quantity: newQuantity } })
+          .then(() => {
+            return response.redirect("/cart");
+          });
+      });
+    });
   // Product.findById(productId, (product) => {
   //   Cart.addProduct(product.id, product.price);
   // });
-
-  
 };
 
 module.exports.getCheckout = (request, response) => {
@@ -152,18 +153,18 @@ module.exports.getCheckout = (request, response) => {
 };
 
 module.exports.deleteCartItem = (request, response) => {
-
-  request.user.getCart()
-  .then(cart => {
-    return cart.getProducts({where:{id:request.body.productId}})
-  })
-  .then(products => {
-    const product = products[0];
-    return product.cartItem.destroy();
-  })
-  .then(result => {
-    response.redirect("/cart");
-  })
+  request.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts({ where: { id: request.body.productId } });
+    })
+    .then((products) => {
+      const product = products[0];
+      return product.cartItem.destroy();
+    })
+    .then((result) => {
+      response.redirect("/cart");
+    });
 
   // const productId = request.body.productId;
   // Product.findById(productId, (product) => {
@@ -173,30 +174,32 @@ module.exports.deleteCartItem = (request, response) => {
   // });
 };
 
-module.exports.postOrder = (request,response) => {
+module.exports.postOrder = (request, response) => {
   // 1. Get all the cart items.
   let productList;
-  request.user.getCart().then(cart => {
-    return cart.getProducts();
-  })
-  .then((products) => {
-    productList = products;
-    return request.user.createOrder();
-  })
-  .then(order => {
-    return order.addProducts(productList)
-  })
-  .then(result => {
-    return response.redirect("/orders")
-  })
-  .catch((error) => {
+  request.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts();
+    })
+    .then((products) => {
+      productList = products;
+      return request.user.createOrder();
+    })
+    .then((order) => {
+      return order.addProducts(productList);
+    })
+    .then((result) => {
+      return response.redirect("/orders");
+    })
+    .catch((error) => {
       console.log(error);
-  })
-}
+    });
+};
 
-module.exports.getOrders = (request,response) => {
-  response.render("shop/orders",{
+module.exports.getOrders = (request, response) => {
+  response.render("shop/orders", {
     path: "/orders",
-    pageTitle: "Orders Page"
-  })
-}
+    pageTitle: "Orders Page",
+  });
+};
