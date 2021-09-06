@@ -1,15 +1,17 @@
 // Import mongodb.
 const mongodb = require("mongodb");
 
+// --- dotenv configuration ---
+const dotenv = require("dotenv");
+dotenv.config();
+
 // Mongo Client.
 const MongoClient = mongodb.MongoClient;
 
 let _db;
 
 const mongodbClient = (callback) => {
-  MongoClient.connect(
-    "mongodb+srv://root:root@cluster0.1xjeb.mongodb.net/shop?retryWrites=true&w=majority"
-  )
+  MongoClient.connect(process.env.MONGO_DB_URL)
     .then((client) => {
       console.log("DB Connected ...");
       _db = client.db();
