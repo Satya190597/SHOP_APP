@@ -25,7 +25,7 @@ const app = express();
 // ---- ADMIN ROUTES START ----
 
 const adminRoutes = require("./routes/admin");
-// const shopRoutes = require("./routes/shop");
+const shopRoutes = require("./routes/shop");
 const errorController = require("./sequelize-controllers/error");
 
 // ---- ADMIN ROUTES END ----
@@ -64,8 +64,7 @@ app.use(express.static("public"));
 // });
 
 app.use("/admin", adminRoutes);
-// app.use(shopRoutes);
-
+app.use(shopRoutes);
 app.use(errorController.pageNotFound);
 
 // Define Relationship.
