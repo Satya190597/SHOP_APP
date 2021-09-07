@@ -1,4 +1,4 @@
-const Product = require("../models/product");
+const Product = require("../mongodb-models/product");
 
 module.exports.getAddProduct = (request, response) => {
   const querySuccess = request.query.success;

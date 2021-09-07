@@ -3,6 +3,9 @@ const cors = require("cors");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongodbClient = require("./util/database").mongodbClient;
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 
 // Mysql Database import.
 // const sequelize = require("./util/sequelize-database");
@@ -105,7 +108,11 @@ app.use(errorController.pageNotFound);
 //     console.log(error);
 //   });
 
-mongodbClient((client) => {
-  console.log(client);
-  app.listen(3002);
-});
+mongoose
+  .connect(process.env.MONGO_DB_URL)
+  .then((result) => {
+    app.listen(3002);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
