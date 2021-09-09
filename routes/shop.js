@@ -10,8 +10,8 @@ router.get("/products", shopController.getProducts);
 
 // router.get("/cart", shopController.getCart);
 
-// // => Cart POST Route.
-// router.post("/cart", shopController.postCart);
+// => Cart POST Route.
+router.post("/cart", shopController.postCart);
 
 // // => Cart Delete Item POST.
 // router.post("/cart-delete-item", shopController.deleteCartItem);

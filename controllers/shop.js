@@ -55,3 +55,18 @@ exports.getProduct = (request, response, next) => {
       });
     });
 };
+
+exports.postCart = (request, response) => {
+  const productId = request.body.productId;
+
+  Product.findById(productId)
+    .then((product) => {
+      return request.user.addToCart(product);
+    })
+    .then((result) => {
+      return response.redirect("/cart");
+    })
+    .catch((error) => {
+      response.redirect("/cart");
+    });
+};

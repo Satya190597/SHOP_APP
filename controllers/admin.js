@@ -60,6 +60,7 @@ exports.getEditProduct = (request, response) => {
 
 exports.getProducts = (request, response) => {
   Product.find()
+    .populate("userId", "name")
     .then((products) => {
       response.render("admin/product-list", {
         pageTitle: "Admin Product List",
