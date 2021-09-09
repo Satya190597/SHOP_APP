@@ -70,3 +70,28 @@ exports.postCart = (request, response) => {
       response.redirect("/cart");
     });
 };
+
+exports.getCart = (request, response) => {
+  request.user
+    .populate("cart.items.productId")
+    .then((user) => {
+      response.render("shop/cart", {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        cartProducts: user.cart.items,
+      });
+    })
+    .catch((error) => {});
+};
+
+exports.deleteCartItem = (request, response) => {
+  const productId = request.body.productId;
+  request.user
+    .removeFromCart(productId)
+    .then((result) => {
+      return response.redirect("/cart");
+    })
+    .catch((error) => {
+      return response.redirect("/cart");
+    });
+};
