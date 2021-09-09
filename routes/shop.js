@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/", shopController.getIndex);
 
-// router.get("/products", shopController.getProducts);
+router.get("/products", shopController.getProducts);
 
 // router.get("/cart", shopController.getCart);
 
@@ -18,8 +18,8 @@ router.get("/", shopController.getIndex);
 
 // router.get("shop/checkout", shopController.getCheckout);
 
-// // Dynamic Routes | => GET Route.
-// router.get("/products/:productId", shopController.getProduct);
+// Dynamic Routes | => GET Route.
+router.get("/products/:productId", shopController.getProduct);
 
 // router.post("/orders", shopController.postOrder);
 

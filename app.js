@@ -110,6 +110,7 @@ app.use(errorController.pageNotFound);
 mongoose
   .connect(process.env.MONGO_DB_URL)
   .then((result) => {
+    console.log("Database Connected ....");
     app.listen(3002);
   })
   .catch((error) => {
