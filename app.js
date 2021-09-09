@@ -7,6 +7,8 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 
+const User = require("./models/user");
+
 // Mysql Database import.
 // const sequelize = require("./util/sequelize-database");
 
@@ -51,17 +53,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
 // Adding a user middleware.
-// app.use((request, response, next) => {
-//   User.findByPk(1)
-//     .then((user) => {
-//       request.user = user;
-//       console.log(user.id);
-//       next();
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-// });
+app.use((request, response, next) => {
+  User.findById("61399f6be46aac2d39dbff09")
+    .then((user) => {
+      request.user = user;
+      next();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -111,7 +112,21 @@ mongoose
   .connect(process.env.MONGO_DB_URL)
   .then((result) => {
     console.log("Database Connected ....");
-    app.listen(3002);
+    User.findOne()
+      .then((user) => {
+        if (!user) {
+          const user = new User({
+            name: "Satya",
+            email: "nandy@yahoo.in",
+            cart: { items: [] },
+          });
+          user.save();
+        }
+        app.listen(3002);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   })
   .catch((error) => {
     console.log(error);
