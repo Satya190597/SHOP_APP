@@ -4,9 +4,20 @@
     <body>
         <%- include('../includes/navigation.ejs') %>
         <h1>Orders !</h1>
-        <ul>
-            <li></li>
-        </ul>
+        <ol>
+            <% for(let order of orders) { console.log(order) %>
+                
+                    <li>Quantity <%= order._id%></li>
+                    <ul>
+                    <% for(let product of order.products) { %>                       
+                        <li>
+                            <span><%= product.productData.title%> Price <%= product.productData.price%> Quantity <%= product.quantity%></span>
+                        </li>                                               
+                    <% } %>
+                    </ul>
+            <% } %>
+         </ol>
+       
     </body>
 
 <%- include('../includes/end.ejs') %>

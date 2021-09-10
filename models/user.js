@@ -1,4 +1,3 @@
-const { ObjectId } = require("bson");
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -64,6 +63,11 @@ userSchema.methods.removeFromCart = function (productId) {
   this.cart = updatedCart;
 
   return this.save();
+};
+
+userSchema.methods.clearCart = function () {
+  this.cart = { items: [] };
+  this.save();
 };
 
 module.exports = mongoose.model("User", userSchema);

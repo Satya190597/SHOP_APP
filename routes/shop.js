@@ -21,8 +21,8 @@ router.post("/cart-delete-item", shopController.deleteCartItem);
 // Dynamic Routes | => GET Route.
 router.get("/products/:productId", shopController.getProduct);
 
-// router.post("/orders", shopController.postOrder);
+router.post("/orders", shopController.postOrder);
 
-// router.get("/orders", shopController.getOrders);
+router.get("/orders", shopController.getOrders);
 
 module.exports = router;

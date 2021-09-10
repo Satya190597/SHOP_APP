@@ -1,4 +1,5 @@
 const Product = require("../models/product");
+const Order = require("../models/order");
 
 exports.getIndex = (request, response) => {
   Product.find()
@@ -94,4 +95,45 @@ exports.deleteCartItem = (request, response) => {
     .catch((error) => {
       return response.redirect("/cart");
     });
+};
+
+exports.postOrder = (request, response, next) => {
+  request.user
+    .populate("cart.items.productId")
+    .then((user) => {
+      const cartItems = user.cart.items.map((items) => {
+        return {
+          quantity: items.quantity,
+          productData: { ...items.productId._doc },
+        };
+      });
+      const order = new Order({
+        products: cartItems,
+        user: {
+          name: request.user.name,
+          userId: request.user._id,
+        },
+      });
+      return order.save();
+    })
+    .then((result) => {
+      return request.user.clearCart();
+    })
+    .then((result) => {
+      return response.redirect("/orders");
+    })
+    .catch((error) => {
+      console.log(error);
+      response.redirect("/orders");
+    });
+};
+
+exports.getOrders = (request, response, next) => {
+  Order.find({ "user.userId": request.user._id }).then((orders) => {
+    response.render("shop/orders", {
+      path: "/orders",
+      pageTitle: "Your Orders",
+      orders: orders,
+    });
+  });
 };
