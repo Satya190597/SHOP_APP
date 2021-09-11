@@ -28,6 +28,7 @@ const app = express();
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const authRoutes = require("./routes/auth");
 const errorController = require("./sequelize-controllers/error");
 
 // ---- ADMIN ROUTES END ----
@@ -65,6 +66,7 @@ app.use((request, response, next) => {
 });
 
 app.use("/admin", adminRoutes);
+app.use("/auth", authRoutes);
 app.use(shopRoutes);
 app.use(errorController.pageNotFound);
 
