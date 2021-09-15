@@ -7,8 +7,13 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 const User = require("./models/user");
+const store = MongoDBStore({
+  uri: process.env.MONGO_DB_URL,
+  collection: "sessions",
+});
 
 // Mysql Database import.
 // const sequelize = require("./util/sequelize-database");
@@ -59,6 +64,7 @@ app.use(
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
+    store: store,
   })
 );
 
