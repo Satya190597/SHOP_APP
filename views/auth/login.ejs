@@ -5,11 +5,12 @@
     <%- include('../includes/navigation.ejs') %>
     <main>      
         <h1>Login Page</h1>
-        <form>
+        <form method="POST" action="/auth/login">
             <label for="">Email</label>
             <input type="text">
             <label for="">Password</label>
             <input type="password" name="" id="">
+            <button type="submit">Login</button>
         </form>
     </main>
 

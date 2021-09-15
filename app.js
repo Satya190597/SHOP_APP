@@ -6,6 +6,7 @@ const mongodbClient = require("./util/database").mongodbClient;
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
+const session = require("express-session");
 
 const User = require("./models/user");
 
@@ -52,6 +53,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(express.static(path.join(dirname(require.main.filename), "public")));
 
 app.use(express.static("public"));
+
+app.use(
+  session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 // Adding a user middleware.
 app.use((request, response, next) => {
